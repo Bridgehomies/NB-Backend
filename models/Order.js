@@ -1,3 +1,5 @@
+// Path: NB-Backend/models/Order.js
+
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
@@ -28,15 +30,30 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     total: Number,
-
-    // 👇 Important additions
     status: {
       type: String,
-      enum: ["pending", "processing", "shipped", "delivered", "cancelled"],
+      enum: ["pending", "processing", "ready-to-ship", "shipped", "delivered", "cancelled"],
       default: "pending",
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "failed", "refunded"],
+      default: "paid",
+    },
+    trackingNumber: {
+      type: String,
+      default: "",
+    },
+    notes: {
+      type: String,
+      default: "",
     },
   },
   { timestamps: true } // Adds createdAt and updatedAt fields
 );
+
+// Add index for better query performance
+orderSchema.index({ status: 1, createdAt: -1 });
+orderSchema.index({ "shippingInfo.email": 1 });
 
 module.exports = mongoose.model("Order", orderSchema);
