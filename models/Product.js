@@ -29,13 +29,10 @@ const productSchema = new mongoose.Schema({
   category: String,
   subcategory: String,
   inStock: Boolean,
-  dateAdded: Date,
-  rating: Number,
-  reviews: Number,
-  salePrice: {
-    type: Number,
-    default: null
-  }
+  dateAdded: { type: Date, default: Date.now },
+  rating: { type: Number, default: 0 },
+  reviews: { type: Number, default: 0 },
+  salePrice: { type: Number, default: null },
 });
 
 module.exports = mongoose.model("Product", productSchema);

@@ -1,3 +1,5 @@
+// NB-Backend/routes/stats.js
+
 const express = require("express");
 const router = express.Router();
 const Order = require("../models/Order");
@@ -81,26 +83,29 @@ router.get("/recent-orders", async (req, res) => {
 
 
 router.get("/top-products", async (req, res) => {
-    try {
-      const topProducts = await Order.aggregate([
-        { $unwind: "$items" },
-        {
-          $group: {
-            _id: "$items.name",
-            totalSold: { $sum: "$items.quantity" },
-            totalRevenue: { $sum: { $multiply: ["$items.price", "$items.quantity"] } }
-          }
-        },
-        { $sort: { totalSold: -1 } },
-        { $limit: 5 }
-      ]);
-  
-      res.json(topProducts);
-    } catch (err) {
-      console.error("Error fetching top products:", err);
-      res.status(500).json({ error: "Failed to fetch top products" });
-    }
-  });
+  try {
+    const topProducts = await Order.aggregate([
+      { $unwind: "$items" },
+      {
+        $group: {
+          _id: "$items.name",
+          totalSold: { $sum: "$items.quantity" },
+          totalRevenue: { 
+            $sum: { $multiply: ["$items.price", "$items.quantity"] } 
+          },
+          image: { $first: "$items.image" } // Add this line to get the image
+        }
+      },
+      { $sort: { totalSold: -1 } },
+      { $limit: 5 }
+    ]);
+
+    res.json(topProducts);
+  } catch (err) {
+    console.error("Error fetching top products:", err);
+    res.status(500).json({ error: "Failed to fetch top products" });
+  }
+});
   
 
 module.exports = router;
