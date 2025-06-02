@@ -48,7 +48,7 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch((err) => console.error("❌ MongoDB connection error:", err));
 
 // ✅ Routes (prefix all with /api)
-app.use("/api", productRoutes);
+app.use("/api/products", productRoutes);
 app.use("/api", orderRoutes);
 app.use("/api", statsRoutes);
 app.use("/api", reviewsRoutes);
