@@ -16,53 +16,44 @@ const reviewsRoutes = require("./routes/reviews");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+// ✅ Middleware - allow local frontend and credentials
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:3001"], // allow both
+  origin: ["http://localhost:3000", "http://localhost:3001"],
   credentials: true,
 }));
+app.use(express.json());
 
-// Serve uploaded images statically
+// ✅ Serve uploaded images statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Multer setup for image upload
+// ✅ Multer setup
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = `${Date.now()}-${file.originalname}`;
-    cb(null, uniqueName);
-  },
+  destination: (req, file, cb) => cb(null, "uploads/"),
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
 });
 const upload = multer({ storage });
 
-// Apply multer middleware globally if needed
+// Optionally attach `upload` middleware globally
 app.use((req, res, next) => {
   req.upload = upload;
   next();
 });
 
-// MongoDB Connection
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+// ✅ MongoDB Connection
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("✅ MongoDB Connected"))
+.catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// Routes
+// ✅ Routes (prefix all with /api)
 app.use("/api", productRoutes);
 app.use("/api", orderRoutes);
 app.use("/api", statsRoutes);
 app.use("/api", reviewsRoutes);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-
-// Start server
+// ✅ Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
