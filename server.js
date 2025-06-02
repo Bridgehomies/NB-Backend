@@ -1,275 +1,93 @@
-// // const express = require('express');
-// // const mongoose = require('mongoose');
-// // const cors = require('cors');
-// // const multer = require('multer');
-// // const path = require('path');
-// // require('dotenv').config();
+// server.js
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const multer = require("multer");
+const path = require("path");
+require("dotenv").config();
 
-// // const Order = require('./models/Order'); // Order model
-// // const Product = require('./models/Product'); // Product model
+// Import routes
+const productRoutes = require("./routes/products");
+const orderRoutes = require("./routes/orders");
+const statsRoutes = require("./routes/stats");
+const reviewsRoutes = require("./routes/reviews");
 
-// // const app = express();
-// // const PORT = process.env.PORT || 5000;
-
-// // // Middleware
-// // app.use(cors());
-// // app.use(express.json());
-// // app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve image files
-
-// // // MongoDB Connection
-// // mongoose.connect(process.env.MONGO_URI, {
-// //   useNewUrlParser: true,
-// //   useUnifiedTopology: true
-// // }).then(() => console.log('MongoDB Connected'))
-// //   .catch(err => console.error('MongoDB connection error:', err));
-
-// // // Multer setup for image upload
-// // const storage = multer.diskStorage({
-// //   destination: (req, file, cb) => cb(null, 'uploads/'),
-// //   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
-// // });
-// // const upload = multer({ storage });
-
-// // // ===================== PRODUCT ROUTES ===================== //
-
-// // // GET all products
-// // app.get('/api/products', async (req, res) => {
-// //   const products = await Product.find();
-// //   res.json(products);
-// // });
-
-// // // GET single product by ID
-// // app.get('/api/products/:id', async (req, res) => {
-// //   try {
-// //     const product = await Product.findById(req.params.id);
-// //     if (!product) return res.status(404).json({ message: 'Product not found' });
-// //     res.json(product);
-// //   } catch (error) {
-// //     res.status(500).json({ error: 'Something went wrong' });
-// //   }
-// // });
-
-// // // POST new product with image upload
-// // app.post('/api/products', upload.single('image'), async (req, res) => {
-// //   try {
-// //     const {
-// //       name, price, description,
-// //       category, subcategory, inStock,
-// //       dateAdded, rating, reviews
-// //     } = req.body;
-
-// //     const imagePath = req.file ? `/uploads/${req.file.filename}` : '';
-
-// //     const product = new Product({
-// //       name, price, description,
-// //       image: imagePath,
-// //       category, subcategory, inStock,
-// //       dateAdded, rating, reviews
-// //     });
-
-// //     await product.save();
-// //     res.status(201).json({ message: 'Product created successfully', product });
-// //   } catch (error) {
-// //     res.status(500).json({ error: 'Failed to create product' });
-// //   }
-// // });
-
-// // // PUT update product
-// // app.put('/api/products/:id', async (req, res) => {
-// //   try {
-// //     const {
-// //       name, price, description, image,
-// //       category, subcategory, inStock,
-// //       dateAdded, rating, reviews
-// //     } = req.body;
-
-// //     const updatedProduct = await Product.findByIdAndUpdate(
-// //       req.params.id,
-// //       {
-// //         name, price, description, image,
-// //         category, subcategory, inStock,
-// //         dateAdded, rating, reviews
-// //       },
-// //       { new: true }
-// //     );
-
-// //     if (!updatedProduct) return res.status(404).json({ message: 'Product not found' });
-// //     res.json({ message: 'Product updated', product: updatedProduct });
-// //   } catch (error) {
-// //     res.status(500).json({ error: 'Failed to update product' });
-// //   }
-// // });
-
-// // // DELETE product
-// // app.delete('/api/products/:id', async (req, res) => {
-// //   try {
-// //     const deletedProduct = await Product.findByIdAndDelete(req.params.id);
-// //     if (!deletedProduct) return res.status(404).json({ message: 'Product not found' });
-// //     res.json({ message: 'Product deleted' });
-// //   } catch (error) {
-// //     res.status(500).json({ error: 'Failed to delete product' });
-// //   }
-// // });
-
-// // // PUT update product with sale price
-// // app.put('/api/products/:id/sale', async (req, res) => {
-// //   try {
-// //     const { salePrice } = req.body;
-
-// //     if (typeof salePrice !== 'number' || salePrice <= 0) {
-// //       return res.status(400).json({ error: 'Invalid sale price' });
-// //     }
-
-// //     const product = await Product.findById(req.params.id);
-// //     if (!product) return res.status(404).json({ error: 'Product not found' });
-
-// //     if (salePrice >= product.price) {
-// //       return res.status(400).json({ error: 'Sale price must be less than regular price' });
-// //     }
-
-// //     product.salePrice = salePrice;
-// //     await product.save();
-
-// //     res.json(product);
-// //   } catch (err) {
-// //     res.status(500).json({ error: 'Server error' });
-// //   }
-// // });
-
-
-// // // ===================== ORDER ROUTES ===================== //
-
-// // // POST new order
-// // app.post('/api/orders', async (req, res) => {
-// //   try {
-// //     const { name, email, phone, address, productIds } = req.body;
-
-// //     const newOrder = new Order({
-// //       name,
-// //       email,
-// //       phone,
-// //       address,
-// //       productIds
-// //     });
-
-// //     const savedOrder = await newOrder.save();
-// //     res.status(201).json(savedOrder);
-// //   } catch (err) {
-// //     res.status(500).json({ error: 'Failed to place order' });
-// //   }
-// // });
-
-// // // GET all orders
-// // app.get('/api/orders', async (req, res) => {
-// //   try {
-// //     const orders = await Order.find().sort({ createdAt: -1 });
-// //     res.json(orders);
-// //   } catch (err) {
-// //     res.status(500).json({ error: 'Failed to fetch orders' });
-// //   }
-// // });
-// // // Update order status
-// // app.put('/orders/:id/status', async (req, res) => {
-// //   try {
-// //     const { status } = req.body;
-// //     const updatedOrder = await Order.findByIdAndUpdate(
-// //       req.params.id,
-// //       { status },
-// //       { new: true }
-// //     );
-// //     res.status(200).json(updatedOrder);
-// //   } catch (err) {
-// //     res.status(500).json({ error: 'Failed to update order status' });
-// //   }
-// // });
-
-
-// // // ===================== START SERVER ===================== //
-// // app.listen(PORT, () => {
-// //   console.log(`Server running on port ${PORT}`);
-// // });
-
-
-// const express = require('express');
-// const mongoose = require('mongoose');
-// const cors = require('cors');
-// const multer = require('multer');
-// const path = require('path');
-// require('dotenv').config();
-
-// const productRoutes = require('./routes/products');
-// const orderRoutes = require('./routes/orders');
-
-// const app = express();
-// const PORT = process.env.PORT || 5000;
-
-// // Middleware
-// app.use(cors());
-// app.use(express.json());
-// app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded images
-
-// // Multer setup
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => cb(null, 'uploads/'),
-//   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
-// });
-// const upload = multer({ storage });
-// app.use(upload.single('image')); // Apply multer globally (or use inside route if needed)
-
-// // MongoDB Connection
-// mongoose.connect(process.env.MONGO_URI, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true
-// }).then(() => console.log('MongoDB Connected'))
-//   .catch(err => console.error('MongoDB connection error:', err));
-
-// // Routes
-// app.use('/api', productRoutes);
-// app.use('/api', orderRoutes);
-
-// // Start server
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
-
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const multer = require('multer');
-const path = require('path');
-require('dotenv').config();
-
-const productRoutes = require('./routes/products');
-const orderRoutes = require('./routes/orders');
-
+// Initialize app
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// ✅ Enhanced CORS - allow multiple origins
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3001", 
+  "http://localhost:5000",
+  // Add your production frontend URL here if you have one
+  // "https://your-frontend-domain.vercel.app"
+];
 
-// Multer setup
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
+
+app.use(express.json());
+
+// ✅ Serve uploaded images statically
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// ✅ Basic health check route
+app.get("/", (req, res) => {
+  res.json({ message: "Backend is running!", timestamp: new Date() });
+});
+
+// ✅ API health check
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK", message: "API is working" });
+});
+
+// ✅ Multer setup
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+  destination: (req, file, cb) => cb(null, "uploads/"),
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
 });
 const upload = multer({ storage });
-app.use(upload.single('image'));
 
-// MongoDB Connection
+// Optionally attach `upload` middleware globally
+app.use((req, res, next) => {
+  req.upload = upload;
+  next();
+});
+
+// ✅ MongoDB Connection
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
-}).then(() => console.log('MongoDB Connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+})
+.then(() => console.log("✅ MongoDB Connected"))
+.catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// Routes
-app.use('/api', productRoutes);
-app.use('/api', orderRoutes);
+// ✅ Routes (prefix all with /api)
+app.use("/api/products", productRoutes);
+app.use("/api", orderRoutes);
+app.use("/api", statsRoutes);
+app.use("/api", reviewsRoutes);
 
-// Start server
+// ✅ 404 handler for undefined routes
+app.use("*", (req, res) => {
+  res.status(404).json({ error: "Route not found" });
+});
+
+// ✅ Start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📡 Health check available at: http://localhost:${PORT}/api/health`);
 });
