@@ -2,7 +2,6 @@
 
 const express = require("express");
 const multer = require("multer");
-const path = require("path");
 const Product = require("../models/Product");
 
 const router = express.Router();
@@ -21,7 +20,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // GET all products
-router.get("/products", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const products = await Product.find();
     res.json(products);
@@ -31,7 +30,7 @@ router.get("/products", async (req, res) => {
 });
 
 // GET single product by ID
-router.get("/products/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ message: "Product not found" });
@@ -42,7 +41,7 @@ router.get("/products/:id", async (req, res) => {
 });
 
 // POST create new product
-router.post("/products", upload.single("image"), async (req, res) => {
+router.post("/", upload.single("image"), async (req, res) => {
   try {
     const {
       name,
@@ -80,7 +79,7 @@ router.post("/products", upload.single("image"), async (req, res) => {
 });
 
 // PUT update product
-router.put("/products/:id", upload.single("image"), async (req, res) => {
+router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const {
       name,
@@ -128,7 +127,7 @@ router.put("/products/:id", upload.single("image"), async (req, res) => {
 });
 
 // PUT update sale price
-router.put("/products/:id/sale", async (req, res) => {
+router.put("/:id/sale", async (req, res) => {
   try {
     const { salePrice } = req.body;
     const product = await Product.findById(req.params.id);
@@ -149,7 +148,7 @@ router.put("/products/:id/sale", async (req, res) => {
 });
 
 // DELETE product
-router.delete("/products/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const deletedProduct = await Product.findByIdAndDelete(req.params.id);
     if (!deletedProduct) return res.status(404).json({ message: "Product not found" });
