@@ -25,7 +25,11 @@ router.get("/", async (req, res) => {
     const products = await Product.find();
     res.json(products);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch products" });
+    console.error("Error fetching products:", error); // Log full error
+    res.status(500).json({ 
+      error: "Failed to fetch products",
+      details: error.message
+    });
   }
 });
 
