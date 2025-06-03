@@ -1,9 +1,0 @@
-app = "NAB-BAR-BackEnd"
-
-[build]
-  builder = "heroku/buildpacks:20"
-
-[env]
-  MONGO_URI = "mongodb+srv://NB-backend:nabeerabareera1@cluster0.rnfa1hh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-  EMAIL_USER = "homiesbridge@gmail.com"
-  EMAIL_PASS = "wabx denp fvro fgkf"
