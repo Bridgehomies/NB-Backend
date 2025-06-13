@@ -256,15 +256,27 @@ router.put("/:id/sale", async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ error: "Product not found" });
 
-    if (typeof salePrice !== "number" || salePrice >= product.price) {
-      return res.status(400).json({ error: "Sale price must be less than original price" });
+    if (salePrice === null) {
+      // Remove from sale
+      product.salePrice = null;
+      product.isSale = false;
+    } else {
+      if (typeof salePrice !== "number") {
+        return res.status(400).json({ error: "Sale price must be a number" });
+      }
+
+      if (salePrice >= product.price) {
+        return res.status(400).json({ error: "Sale price must be less than original price" });
+      }
+
+      product.salePrice = salePrice;
+      product.isSale = true;
     }
 
-    product.salePrice = salePrice;
     await product.save();
-
     res.json(product);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Server error" });
   }
 });
