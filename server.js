@@ -22,7 +22,7 @@ const allowedOrigins = [
   "http://localhost:3001", 
   "http://localhost:5000",
   // Add your production frontend URL here if you have one
-  // "https://your-frontend-domain.vercel.app"
+  "nb-backend.vercel.app"
 ];
 
 app.use(cors({
