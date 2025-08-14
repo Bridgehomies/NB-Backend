@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+// NB-Backend/routes/auth.js
+=======
+>>>>>>> 6b1badc66a0c621422d201cdb2e2925adbebd945
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");

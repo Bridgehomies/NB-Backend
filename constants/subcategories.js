@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // constants/subcategories.js
 export const SUBCATEGORIES = {
   JEWELRY: [
@@ -38,4 +39,46 @@ export const SUBCATEGORIES = {
     "SCHOOL",
     "SEASONAL",
   ],
+=======
+// constants/subcategories.js
+export const SUBCATEGORIES = {
+  JEWELRY: [
+    "NECKLACES",
+    "EARRINGS",
+    "BRACELETS",
+    "RINGS",
+    "CRYSTAL COLLECTION",
+    "PEARL COLLECTION",
+    "STATEMENT PIECES",
+    "MINIMALIST",
+    "GOLD PLATED",
+    "SILVER PLATED",
+    "ROSE GOLD",
+    "GEMSTONES",
+  ],
+  COATS: [
+    "OVERCOATS",
+    "TRENCH COATS",
+    "PUFFER JACKETS",
+    "PARKAS",
+    "WOOL",
+    "LEATHER",
+    "COTTON",
+    "SYNTHETIC",
+  ],
+  KIDS_CLOTHING: [
+    "TOPS",
+    "BOTTOMS",
+    "DRESSES",
+    "OUTERWEAR",
+    "BABY (0-2 YEARS)",
+    "TODDLER (2-4 YEARS)",
+    "LITTLE KIDS (4-7 YEARS)",
+    "BIG KIDS (8-12 YEARS)",
+    "CASUAL",
+    "FORMAL",
+    "SCHOOL",
+    "SEASONAL",
+  ],
+>>>>>>> 6b1badc66a0c621422d201cdb2e2925adbebd945
 };

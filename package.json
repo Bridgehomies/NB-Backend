@@ -1,3 +1,25 @@
+<<<<<<< HEAD
+{
+  "name": "nabeerabareera-backend",
+  "version": "1.0.0",
+  "description": "Backend for NabeeraBareera project",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "cloudinary": "^1.41.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "mongoose": "^7.8.7",
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
+    "nodemailer": "^7.0.3"
+  }
+}
+=======
 {
   "name": "nabeerabareera-backend",
   "version": "1.0.0",
@@ -15,3 +37,4 @@
     "nodemailer": "^7.0.3"
   }
 }
+>>>>>>> 6b1badc66a0c621422d201cdb2e2925adbebd945
