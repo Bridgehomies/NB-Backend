@@ -1,3 +1,8 @@
-// api/index.js - Vercel serverless entry
-const app = require('../server');
+const express = require('express');
+const productsRouter = require('../routes/products');
+const app = express();
+
+app.use(express.json());
+app.use('/products', productsRouter);
+
 module.exports = app;
