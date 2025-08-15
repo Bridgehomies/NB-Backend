@@ -1,10 +1,11 @@
+// api/index.js - Vercel Serverless Entry
 const express = require("express");
 const serverless = require("serverless-http");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
-// Import routes
+// --- Import Routes ---
 const productRoutes = require("../routes/products");
 const orderRoutes = require("../routes/orders");
 const statsRoutes = require("../routes/stats");
@@ -19,7 +20,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
   "http://localhost:5000",
-  "https://nabeerabareera.com" // ✅ Your live domain
+  "https://nabeerabareera.com" // ✅ Live domain
 ];
 app.use(cors({
   origin: (origin, callback) => {
@@ -34,7 +35,7 @@ app.use(cors({
 
 app.use(express.json());
 
-// Health check routes
+// --- Health check ---
 app.get("/", (req, res) => {
   res.json({ message: "Backend is running!", timestamp: new Date() });
 });
@@ -49,25 +50,26 @@ if (!cached) cached = global.mongoose = { conn: null, promise: null };
 async function dbConnect() {
   if (cached.conn) return cached.conn;
   if (!cached.promise) {
-    const opts = { bufferCommands: false };
-    cached.promise = mongoose.connect(process.env.MONGO_URI, opts);
+    cached.promise = mongoose.connect(process.env.MONGO_URI, {
+      bufferCommands: false
+    });
   }
   cached.conn = await cached.promise;
   return cached.conn;
 }
 
-// DB middleware
+// --- DB Middleware ---
 app.use(async (req, res, next) => {
   try {
     await dbConnect();
     next();
   } catch (error) {
     console.error("DB connection failed:", error);
-    return res.status(500).json({ error: "Database connection failed" });
+    res.status(500).json({ error: "Database connection failed" });
   }
 });
 
-// --- Routes (with /api prefix) ---
+// --- API Routes ---
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/stats", statsRoutes);
@@ -75,10 +77,10 @@ app.use("/api/reviews", reviewsRoutes);
 app.use("/api/categories", categoriesRoutes);
 app.use("/api/auth", authRoutes);
 
-// 404 handler
+// --- 404 handler ---
 app.use("*", (req, res) => {
   res.status(404).json({ error: "Route not found" });
 });
 
-// ✅ Export for Vercel serverless
+// ✅ Export wrapped app for Vercel
 module.exports = serverless(app);
