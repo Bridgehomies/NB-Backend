@@ -11,7 +11,7 @@ const statsRouter = require('../routes/stats');
 const app = express();
 app.use(express.json());
 
-// On Vercel, DO NOT prefix `/api`
+// On Vercel, no extra `/api` prefix
 app.use('/products', productsRouter);
 app.use('/categories', categoriesRouter);
 app.use('/orders', ordersRouter);
@@ -19,6 +19,6 @@ app.use('/reviews', reviewsRouter);
 app.use('/auth', authRouter);
 app.use('/stats', statsRouter);
 
-// Wrap Express app for Vercel
+// Export for Vercel
 module.exports = app;
 module.exports.handler = serverless(app);
