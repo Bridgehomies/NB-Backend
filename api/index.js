@@ -1,4 +1,6 @@
 const express = require('express');
+const serverless = require('serverless-http');
+
 const productsRouter = require('../routes/products');
 const categoriesRouter = require('../routes/categories');
 const ordersRouter = require('../routes/orders');
@@ -9,20 +11,14 @@ const statsRouter = require('../routes/stats');
 const app = express();
 app.use(express.json());
 
-// Detect if running on Vercel (serverless)
-const isVercel = process.env.VERCEL === '1';
+// On Vercel, DO NOT prefix `/api`
+app.use('/products', productsRouter);
+app.use('/categories', categoriesRouter);
+app.use('/orders', ordersRouter);
+app.use('/reviews', reviewsRouter);
+app.use('/auth', authRouter);
+app.use('/stats', statsRouter);
 
-// In local dev, keep /api/... routes
-// In Vercel, drop the extra /api (because Vercel adds it automatically)
-const prefix = isVercel ? '' : '/api';
-
-// Routes
-app.use(`${prefix}/products`, productsRouter);
-app.use(`${prefix}/categories`, categoriesRouter);
-app.use(`${prefix}/orders`, ordersRouter);
-app.use(`${prefix}/reviews`, reviewsRouter);
-app.use(`${prefix}/auth`, authRouter);
-app.use(`${prefix}/stats`, statsRouter);
-
-// Export for Vercel
+// Wrap Express app for Vercel
 module.exports = app;
+module.exports.handler = serverless(app);
